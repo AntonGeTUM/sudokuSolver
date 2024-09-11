@@ -34,7 +34,7 @@ public class Sudoku {
     }
 
     private int findQuadrant(int a) {
-        return switch(a) {
+        return switch (a) {
             case 0, 1, 2 -> 0;
             case 3, 4, 5 -> 3;
             case 6, 7, 8 -> 6;
@@ -54,7 +54,7 @@ public class Sudoku {
     public int[] findEmptyField() {
         for (int i = 0; i < sudoku.length; i++) {
             for (int j = 0; j < sudoku[0].length; j++) {
-                if (sudoku[i][j] == 0) return new int[] {i, j};
+                if (sudoku[i][j] == 0) return new int[]{i, j};
             }
         }
         return new int[0];
@@ -65,71 +65,29 @@ public class Sudoku {
             sudoku[a[0]][a[1]] = a[2];
         }
     }
-    /*
-    public boolean validRow(int row) {
-        boolean[] temp = new boolean[9];
-        for (int i = 0; i < 9; i++) {
-            int val = sudoku[row][i];
-            if (val != 0) {
-                if (temp[val - 1]) return false;
-                else temp[val - 1] = true;
-            }
-        }
-        return true;
-    }
-
-    public boolean validColumn(int column) {
-        boolean[] temp = new boolean[9];
-        for (int i = 0; i < 9; i++) {
-            int val = sudoku[i][column];
-            if (val != 0) {
-                if (temp[val - 1]) return false;
-                else temp[val - 1] = true;
-            }
-        }
-        return true;
-    }
-
-    public boolean validQuadrant(int row, int col) {
-        boolean[] temp = new boolean[9];
-        int rowIndex = findQuadrant(row);
-        int colIndex = findQuadrant(col);
-        for (int i = rowIndex; i <= rowIndex + 2; i++) {
-            for (int j = colIndex; j <= colIndex + 2; j++) {
-                int val = sudoku[i][j];
-                if (val != 0) {
-                    if (temp[val - 1]) return false;
-                    else temp[val - 1] = true;
-                }
-            }
-        }
-        return true;
-    }*/
 
     public List<Integer> possibleValues(int row, int column) {
         List<Integer> res = new ArrayList<>();
-        int[] tempArray = new int[] {1,2,3,4,5,6,7,8,9};
+        int[] tempArray = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-        //if (validRow(row) && validColumn(column) && validQuadrant(row, column)) {
-            for (int i = 0; i < 9; i++) {
-                if (sudoku[row][i] != 0) {
-                    tempArray[sudoku[row][i] - 1] = 0;
-                }
-                if (sudoku[i][column] != 0) {
-                    tempArray[sudoku[i][column] - 1] = 0;
+        for (int i = 0; i < 9; i++) {
+            if (sudoku[row][i] != 0) {
+                tempArray[sudoku[row][i] - 1] = 0;
+            }
+            if (sudoku[i][column] != 0) {
+                tempArray[sudoku[i][column] - 1] = 0;
+            }
+        }
+
+        int rowIndex = findQuadrant(row);
+        int colIndex = findQuadrant(column);
+        for (int i = rowIndex; i <= rowIndex + 2; i++) {
+            for (int j = colIndex; j <= colIndex + 2; j++) {
+                if (sudoku[i][j] != 0) {
+                    tempArray[sudoku[i][j] - 1] = 0;
                 }
             }
-
-            int rowIndex = findQuadrant(row);
-            int colIndex = findQuadrant(column);
-            for (int i = rowIndex; i <= rowIndex + 2; i++) {
-                for (int j = colIndex; j <= colIndex + 2; j++) {
-                    if (sudoku[i][j] != 0) {
-                        tempArray[sudoku[i][j] - 1] = 0;
-                    }
-                }
-            }
-        //}
+        }
 
         for (int i : tempArray) {
             if (i != 0) res.add(i);

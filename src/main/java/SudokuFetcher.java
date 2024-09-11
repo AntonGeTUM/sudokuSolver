@@ -5,7 +5,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
 
 public class SudokuFetcher {
@@ -50,9 +49,8 @@ public class SudokuFetcher {
         }
     }
 
-
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         SudokuFetcher fetcher = new SudokuFetcher();
         fetcher.fetchSudoku();
-    }
+    }*/
 }

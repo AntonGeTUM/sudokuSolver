@@ -39,7 +39,7 @@ public class Solver {
 
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         int[][] testSudoku3 = new int[][] {
                 {3,0,9,2,0,0,6,0,7},
                 {0,0,0,6,0,0,3,0,4},
@@ -62,6 +62,6 @@ public class Solver {
             System.out.println(e.getMessage());
         }
 
-    }
+    }*/
 
 }
