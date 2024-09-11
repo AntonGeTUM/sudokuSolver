@@ -12,9 +12,7 @@ public class SudokuFetcher {
 
     private String url = "https://www.nytimes.com/puzzles/sudoku";
     private final Date date;
-    private int[] easySudoku;
-    private int[] mediumSudoku;
-    private int[] hardSudoku;
+    private int[][] sudokus = new int[3][];
 
     public SudokuFetcher() {
         date = new Date();
@@ -28,27 +26,22 @@ public class SudokuFetcher {
             String data = element.data();
             data = data.substring(data.indexOf("{"));
             JsonObject jsonObject = JsonParser.parseString(data).getAsJsonObject();
-            JsonArray easy = jsonObject.getAsJsonObject("easy")
-                    .getAsJsonObject("puzzle_data")
-                    .getAsJsonArray("puzzle");
-            easySudoku = new int[easy.size()];
-            JsonToArray(easy, easySudoku);
-            JsonArray medium = jsonObject.getAsJsonObject("medium")
-                    .getAsJsonObject("puzzle_data")
-                    .getAsJsonArray("puzzle");
-            mediumSudoku = new int[easy.size()];
-            JsonToArray(medium, mediumSudoku);
-            JsonArray hard = jsonObject.getAsJsonObject("hard")
-                    .getAsJsonObject("puzzle_data")
-                    .getAsJsonArray("puzzle");
-            hardSudoku = new int[easy.size()];
-            JsonToArray(hard, hardSudoku);
-
-            System.out.println(Arrays.toString(easySudoku));
-
+            JsonArray[] arrays = new JsonArray[3];
+            String[] difficulties = {"easy", "medium", "hard"};
+            for (int i = 0; i < 3; i++) {
+                arrays[i] = getJsonArray(jsonObject, difficulties[i]);
+                sudokus[i] = new int[arrays[i].size()];
+                JsonToArray(arrays[i], sudokus[i]);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private JsonArray getJsonArray(JsonObject object, String difficulty) {
+        return object.getAsJsonObject(difficulty)
+                .getAsJsonObject("puzzle_data")
+                .getAsJsonArray("puzzle");
     }
 
     private void JsonToArray(JsonArray jsonArray, int[] arr) {
