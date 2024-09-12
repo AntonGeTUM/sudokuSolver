@@ -1,3 +1,5 @@
+package logic;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -5,6 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 
 public class SudokuFetcher {
@@ -49,8 +52,11 @@ public class SudokuFetcher {
         }
     }
 
-    /*public static void main(String[] args) {
-        SudokuFetcher fetcher = new SudokuFetcher();
+    /*public static void main(String[] args) throws InvalidSudokuException {
+        logic.SudokuFetcher fetcher = new logic.SudokuFetcher();
         fetcher.fetchSudoku();
+        for (int i = 0; i < 3; i++) {
+            System.out.println(new Sudoku(Sudoku.arrayToMatrix(fetcher.sudokus[i])));
+        }
     }*/
 }

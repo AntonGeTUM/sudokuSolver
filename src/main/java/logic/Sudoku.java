@@ -1,3 +1,5 @@
+package logic;
+
 import java.util.*;
 
 public class Sudoku {
@@ -141,6 +143,17 @@ public class Sudoku {
 
         for (int i : tempArray) {
             if (i != 0) res.add(i);
+        }
+        return res;
+    }
+
+    public static int[][] arrayToMatrix(int[] array) {
+        int[][] res = new int[9][9];
+        int row, col;
+        for (int i = 0; i < array.length; i++) {
+            row = i / 9;
+            col = i % 9;
+            res[row][col] = array[i];
         }
         return res;
     }
