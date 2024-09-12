@@ -5,11 +5,61 @@ public class Sudoku {
     private final int[][] sudoku;
 
     public Sudoku(int[][] a) throws InvalidSudokuException {
-        if (a.length == 9 && a[0].length == 9) {
-            this.sudoku = a;
-        } else {
+        if (a.length != 9) {
             throw new InvalidSudokuException("Sudoku passed to constructor is invalid");
         }
+        for (int i = 0; i < 9; i++) {
+            if (a[i].length != 9) {
+                throw new InvalidSudokuException("Sudoku passed to constructor is invalid");
+            }
+        }
+        if (!validRowsAndColumns(a)) {
+            throw new InvalidSudokuException("Sudoku passed to constructor is invalid");
+        }
+        if (!validQuadrants(a)) {
+            throw new InvalidSudokuException("Sudoku passed to constructor is invalid");
+        }
+
+        this.sudoku = a;
+    }
+
+    public boolean validRowsAndColumns(int[][] matrix) {
+        for (int i = 0; i < 9; i++) {
+            boolean[] usedValuesRow = new boolean[9];
+            boolean[] usedValuesColumn = new boolean[9];
+            for (int j = 0; j < 9; j++) {
+                int valRow = matrix[i][j];
+                if (valRow != 0) {
+                    if (usedValuesRow[valRow - 1]) return false;
+                    else usedValuesRow[valRow - 1] = true;
+                }
+                int valCol = matrix[j][i];
+                if (valCol != 0) {
+                    if (usedValuesColumn[valCol - 1]) return false;
+                    else usedValuesColumn[valCol - 1] = true;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean validQuadrants(int[][] matrix) {
+        int[] quadrantIndices = {0, 3, 6};
+        for (int rowIndex : quadrantIndices) {
+            for (int colIndex : quadrantIndices) {
+                boolean[] temp = new boolean[9];
+                for (int i = rowIndex; i <= rowIndex + 2; i++) {
+                    for (int j = colIndex; j <= colIndex + 2; j++) {
+                        int val = matrix[i][j];
+                        if (val != 0) {
+                            if (temp[val - 1]) return false;
+                            else temp[val - 1] = true;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -60,7 +110,7 @@ public class Sudoku {
         return new int[0];
     }
 
-    public void set(int[] a) {
+    public void setField(int[] a) {
         if (a.length == 3) {
             sudoku[a[0]][a[1]] = a[2];
         }

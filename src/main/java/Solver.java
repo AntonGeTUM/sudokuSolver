@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Solver {
 
@@ -25,10 +23,10 @@ public class Solver {
         List<Integer> temp = sudoku.possibleValues(row, col);
         if (temp.size() != 0) {
             for (int i = 0; i < temp.size(); i++) {
-                sudoku.set(new int[] {row, col, temp.get(i)});
+                sudoku.setField(new int[] {row, col, temp.get(i)});
                 solver(sudoku);
                 if (i == temp.size() - 1 && !sudoku.finished()) {
-                    sudoku.set(new int[] {row, col, 0});
+                    sudoku.setField(new int[] {row, col, 0});
                     return;
                 }
                 if (sudoku.finished()) {
@@ -39,7 +37,7 @@ public class Solver {
 
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         int[][] testSudoku3 = new int[][] {
                 {3,0,9,2,0,0,6,0,7},
                 {0,0,0,6,0,0,3,0,4},
@@ -62,6 +60,6 @@ public class Solver {
             System.out.println(e.getMessage());
         }
 
-    }*/
+    }
 
 }
