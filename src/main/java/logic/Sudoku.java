@@ -25,6 +25,10 @@ public class Sudoku {
         this.sudoku = a;
     }
 
+    public int[][] getSudoku() {
+        return sudoku;
+    }
+
     public boolean validRowsAndColumns(int[][] matrix) {
         for (int i = 0; i < 9; i++) {
             boolean[] usedValuesRow = new boolean[9];
@@ -154,6 +158,17 @@ public class Sudoku {
             row = i / 9;
             col = i % 9;
             res[row][col] = array[i];
+        }
+        return res;
+    }
+
+    public static int[] matrixToArray(int[][] matrix) {
+        int[] res = new int[81];
+        int index = 0;
+        for (int[] ints : matrix) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                res[index++] = ints[j];
+            }
         }
         return res;
     }

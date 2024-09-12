@@ -11,7 +11,8 @@ public class SudokuGUI  extends Application{
 
     @Override
     public void start(Stage stage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/SudokuGUI.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/SudokuGUI.fxml"));
+        Parent root = loader.load();
         stage.setTitle("Sudoku Solver");
         stage.setScene(new Scene(root, 600, 800));
         stage.getIcons().add(new Image("/icon.JPG"));

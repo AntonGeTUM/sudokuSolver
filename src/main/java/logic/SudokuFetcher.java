@@ -21,6 +21,10 @@ public class SudokuFetcher {
         date.setTime(0);
     }
 
+    public int[][] getSudokus() {
+        return sudokus;
+    }
+
     public void fetchSudoku() {
         try {
             Document doc = Jsoup.connect(url).get();

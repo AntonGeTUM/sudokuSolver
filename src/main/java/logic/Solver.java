@@ -14,7 +14,7 @@ public class Solver {
         return this.sudoku;
     }
 
-    public void solver(Sudoku sudoku) {
+    public void solve(Sudoku sudoku) {
         if (sudoku.finished()) {
             this.sudoku = sudoku;
             return;
@@ -26,7 +26,7 @@ public class Solver {
         if (temp.size() != 0) {
             for (int i = 0; i < temp.size(); i++) {
                 sudoku.setField(new int[] {row, col, temp.get(i)});
-                solver(sudoku);
+                solve(sudoku);
                 if (i == temp.size() - 1 && !sudoku.finished()) {
                     sudoku.setField(new int[] {row, col, 0});
                     return;
