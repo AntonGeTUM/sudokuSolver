@@ -11,7 +11,7 @@ import logic.Solver;
 import logic.Sudoku;
 import logic.SudokuFetcher;
 
-public class Controller {
+public class GUIController {
 
     @FXML
     private Menu load;

@@ -14,6 +14,10 @@ public class Solver {
         return this.sudoku;
     }
 
+    public void setSudoku(Sudoku sudoku) {
+        this.sudoku = sudoku;
+    }
+
     public void solve(Sudoku sudoku) {
         if (sudoku.finished()) {
             this.sudoku = sudoku;

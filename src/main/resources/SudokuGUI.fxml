@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="anchor" prefHeight="747.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
+<AnchorPane id="anchor" prefHeight="747.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.GUIController">
    <children>
       <BorderPane id="pane" layoutX="25.0" layoutY="156.0" prefHeight="747.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -22,6 +23,15 @@
                         <MenuItem id="easy" fx:id="easy" mnemonicParsing="false" text="Easy" />
                         <MenuItem id="medium" fx:id="medium" mnemonicParsing="false" text="Medium" />
                         <MenuItem id="hard" fx:id="hard" mnemonicParsing="false" text="Hard" />
+                        <Menu mnemonicParsing="false" text="Load from">
+                          <items>
+                            <MenuItem mnemonicParsing="false">
+                                 <graphic>
+                                    <DatePicker fx:id="datePicker" />
+                                 </graphic>
+                              </MenuItem>
+                          </items>
+                        </Menu>
                      </items>
                   </Menu>
               </menus>

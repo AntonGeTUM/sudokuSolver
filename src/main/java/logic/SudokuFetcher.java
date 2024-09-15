@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class SudokuFetcher {
 
-    private String url = "https://www.nytimes.com/puzzles/sudoku";
+    private final String url = "https://www.nytimes.com/puzzles/sudoku";
     private final Date date;
     private int[][] sudokus = new int[3][];
 
