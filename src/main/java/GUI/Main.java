@@ -3,6 +3,6 @@ package GUI;
 public class Main {
 
     public static void main(String[] args) {
-        SudokuGUI.main(args);
+        new SudokuGUI().begin(args);
     }
 }

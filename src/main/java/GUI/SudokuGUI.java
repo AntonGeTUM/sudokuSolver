@@ -19,7 +19,7 @@ public class SudokuGUI  extends Application{
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public void begin(String[] args) {
         launch(args);
     }
 }

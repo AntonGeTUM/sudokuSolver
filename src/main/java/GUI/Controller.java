@@ -1,5 +1,7 @@
 package GUI;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -52,6 +54,15 @@ public class Controller {
                 for (Node field : textField.getChildren()) {
                     if (field instanceof TextField) {
                         res[quadrantIndices[quadrant][index]] = (TextField)field;
+                        ((TextField)field).lengthProperty().addListener(new ChangeListener<Number>() {
+                            @Override
+                            public void changed(ObservableValue<? extends Number> observableValue,
+                                                Number oldValue, Number newValue) {
+                                if (((TextField)field).getText().length() > 1) {
+                                    ((TextField)field).setText(((TextField)field).getText().substring(0, 1));
+                                }
+                            }
+                        });
                         index = (index + 1) % 9;
                     }
                 }
@@ -59,6 +70,10 @@ public class Controller {
             }
         }
         return res;
+    }
+
+    public void changed(ObservableValue<? extends Number> observable) {
+
     }
 
     public void setSudoku(String id) {
