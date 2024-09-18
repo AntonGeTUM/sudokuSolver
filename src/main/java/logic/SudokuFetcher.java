@@ -7,22 +7,31 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 
 public class SudokuFetcher {
 
     private final String url = "https://www.nytimes.com/puzzles/sudoku";
-    private final Date date;
+    private LocalDate date;
     private int[][] sudokus = new int[3][];
+    private SudokuDB db;
 
     public SudokuFetcher() {
-        date = new Date();
-        date.setTime(0);
+        date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu/MM/dd");
+        formatter.format(date);
+        this.db = new SudokuDB(this);
     }
 
     public int[][] getSudokus() {
         return sudokus;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 
     public void fetchSudoku() {
@@ -39,6 +48,7 @@ public class SudokuFetcher {
                 sudokus[i] = new int[arrays[i].size()];
                 JsonToArray(arrays[i], sudokus[i]);
             }
+            db.insert();
         } catch (IOException e) {
             e.printStackTrace();
         }
