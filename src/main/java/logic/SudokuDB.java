@@ -1,37 +1,107 @@
 package logic;
+import com.google.gson.JsonArray;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import org.bson.Document;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.*;
 import java.util.Arrays;
 
 public class SudokuDB {
 
-    private MongoClient client;
-    private MongoDatabase db;
-    private MongoCollection collection;
-    private SudokuFetcher fetcher;
+    private static final String url = "jdbc:postgresql://localhost:5432/postgres";
+    private static SudokuDB instance;
+    private Connection connection;
 
-    public SudokuDB(SudokuFetcher fetcher) {
-        this.client = MongoClients.create("mongodb+srv://antonge:6zUGiSV4Ra4erB3G@cluster0.n9ovx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
-        this.db = client.getDatabase("sudokuDB");
-        this.collection = db.getCollection("sudokuCollection");
-        this.fetcher = fetcher;
+    private SudokuDB() {
+        try {
+            String[] access = readUserAndPW();
+            if (access == null) {
+                System.out.println("Could not retrieve login data.");
+                return;
+            }
+            connection = DriverManager.getConnection(url, access[0], access[1]);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void insert() {
-        for (int i = 0; i < 3; i++) {
-            String id = fetcher.getDate().toString() + "-" + i;
-            if (collection.find(Filters.eq("id", id)).first() == null) {
-                Document doc = new Document("id", id).append("puzzle", Arrays.toString(fetcher.getSudokus()[i]));
-                collection.insertOne(doc);
-            }
+    public static SudokuDB getInstance() {
+        if (instance == null) {
+            instance = new SudokuDB();
         }
+        return instance;
+    }
 
+    public void insert(String date, JsonArray[] arrays) {
+        final String query = "insert into sudoku(date, easy, medium, hard) values(?, ?, ? , ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, date);
+            statement.setString(2, arrays[0].toString());
+            statement.setString(3, arrays[1].toString());
+            statement.setString(4, arrays[2].toString());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String[] retrieve(String date) {
+        final String query = "select * from sudoku where date=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, date);
+            ResultSet set = statement.executeQuery();
+            set.next();
+            String[] res = new String[3];
+            res[0] = set.getString(2);
+            res[1] = set.getString(3);
+            res[2] = set.getString(4);
+            return res;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean exists(String date) {
+        final String query = "select exists(select 1 from sudoku where date = ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, date);
+            ResultSet set = statement.executeQuery();
+            set.next();
+            return set.getBoolean(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public int[][] parseQuery(String[] queryResult) {
+        int[][] res = new int[3][81];
+        for (int i = 0; i < 3; i++) {
+            String tmp = queryResult[i].substring(1, queryResult[i].length() - 1);
+            res[i] = Arrays.stream(tmp.split(",")).mapToInt(Integer::parseInt).toArray();
+        }
+        return res;
+    }
+
+    private static String[] readUserAndPW() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/postgres.txt"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                sb.append("-");
+            }
+            return sb.toString().split("-");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

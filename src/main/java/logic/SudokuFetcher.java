@@ -1,5 +1,6 @@
 package logic;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -7,6 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -21,9 +23,9 @@ public class SudokuFetcher {
 
     public SudokuFetcher() {
         date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu/MM/dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
         formatter.format(date);
-        this.db = new SudokuDB(this);
+        this.db = SudokuDB.getInstance();
     }
 
     public int[][] getSudokus() {
@@ -35,6 +37,11 @@ public class SudokuFetcher {
     }
 
     public void fetchSudoku() {
+        if (db.exists(date.toString())) {
+            String[] queryResult = db.retrieve(date.toString());
+            sudokus = db.parseQuery(queryResult);
+            return;
+        }
         try {
             Document doc = Jsoup.connect(url).get();
             Element element = doc.getElementById("js-hook-pz-moment__game");
@@ -48,7 +55,7 @@ public class SudokuFetcher {
                 sudokus[i] = new int[arrays[i].size()];
                 JsonToArray(arrays[i], sudokus[i]);
             }
-            db.insert();
+            db.insert(date.toString(), arrays);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,11 +73,4 @@ public class SudokuFetcher {
         }
     }
 
-    /*public static void main(String[] args) throws InvalidSudokuException {
-        logic.SudokuFetcher fetcher = new logic.SudokuFetcher();
-        fetcher.fetchSudoku();
-        for (int i = 0; i < 3; i++) {
-            System.out.println(new Sudoku(Sudoku.arrayToMatrix(fetcher.sudokus[i])));
-        }
-    }*/
 }
