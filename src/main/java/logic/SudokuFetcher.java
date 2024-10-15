@@ -38,8 +38,7 @@ public class SudokuFetcher {
 
     public void fetchSudoku() {
         if (db.exists(date.toString())) {
-            String[] queryResult = db.retrieve(date.toString());
-            sudokus = db.parseQuery(queryResult);
+            fetchFromDate(date);
             return;
         }
         try {
@@ -59,6 +58,11 @@ public class SudokuFetcher {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void fetchFromDate(LocalDate date) {
+        String[] queryResult = db.retrieve(date.toString());
+        sudokus = db.parseQuery(queryResult);
     }
 
     private JsonArray getJsonArray(JsonObject object, String difficulty) {

@@ -65,6 +65,31 @@ public class SudokuDB {
         return null;
     }
 
+    public String[] retrieveDates() {
+        final String query = "select date from sudoku";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet set = statement.executeQuery();
+            int size = 0;
+            if (set != null) {
+                set.last();
+                size = set.getRow();
+                set.beforeFirst();
+                set.next();
+            }
+            String[] res = new String[size];
+            for (int i = 0; i < size; i++) {
+                res[i] = set.getString(1);
+                set.next();
+            }
+            return res;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean exists(String date) {
         final String query = "select exists(select 1 from sudoku where date = ?)";
         try {
@@ -104,4 +129,9 @@ public class SudokuDB {
         return null;
     }
 
+    public static void main(String[] args) {
+        SudokuDB db = getInstance();
+        String[] res = db.retrieveDates();
+        System.out.println(Arrays.toString(res));
+    }
 }

@@ -2,14 +2,17 @@ package GUI;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import logic.InvalidSudokuException;
-import logic.Solver;
-import logic.Sudoku;
-import logic.SudokuFetcher;
+import logic.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GUIController {
 
@@ -27,9 +30,12 @@ public class GUIController {
     private Button solve;
     @FXML
     private GridPane parentGrid;
+    @FXML
+    private DatePicker datePicker;
     private SudokuFetcher fetcher;
     private TextField[] textFields;
     private Solver solver;
+    private SudokuDB db;
 
     public void initialize() {
         fetcher = new SudokuFetcher();
@@ -40,6 +46,31 @@ public class GUIController {
         reset.setOnAction(e -> reset());
         solve.setOnAction(e -> solve());
         this.textFields = collectTextFields();
+        datePicker.getEditor().setDisable(true);
+        datePicker.setOnShowing(e -> updateDatePicker());
+        datePicker.setOnAction(e -> pickSudokuFromDate());
+        db = SudokuDB.getInstance();
+    }
+
+    public void updateDatePicker() {
+        String[] dates = db.retrieveDates();
+        Set<LocalDate> set = new HashSet<>();
+        for (String date : dates) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate tmp = LocalDate.parse(date, formatter);
+            set.add(tmp);
+        }
+        datePicker.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(!set.contains(date));
+            }
+        });
+    }
+
+    public void pickSudokuFromDate() {
+        LocalDate date = datePicker.getValue();
+        fetcher.fetchFromDate(date);
     }
 
     private TextField[] collectTextFields() {
