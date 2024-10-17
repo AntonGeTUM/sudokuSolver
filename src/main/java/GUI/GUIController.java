@@ -108,6 +108,7 @@ public class GUIController {
     }
 
     public void setSudoku(String id) {
+        reset();
         int[] sudoku = switch (id) {
             case "easy" -> fetcher.getSudokus()[0];
             case "medium" -> fetcher.getSudokus()[1];
@@ -120,7 +121,11 @@ public class GUIController {
 
     private void fill(int[] array) {
         for (int i = 0; i < 81; i++) {
-            textFields[i].setText(String.valueOf(array[i]));
+            if (array[i] != 0) {
+                textFields[i].setText(String.valueOf(array[i]));
+            } else {
+                textFields[i].setStyle("-fx-text-fill: steelblue; -fx-font-size: 30px; -fx-background-color: transparent;");
+            }
         }
     }
 
@@ -134,7 +139,10 @@ public class GUIController {
         for (Node pane : parentGrid.getChildren()) {
             if (pane instanceof GridPane textField) {
                 for (Node field : textField.getChildren()) {
-                    if (field instanceof TextField) ((TextField) field).clear();
+                    if (field instanceof TextField) {
+                        ((TextField) field).clear();
+                        ((TextField) field).setStyle("-fx-font-size: 30px; -fx-background-color: transparent;");
+                    }
                 }
             }
         }
@@ -144,7 +152,10 @@ public class GUIController {
         int[] sudoku = new int[81];
         for (int i = 0; i < 81; i++) {
             String input = textFields[i].getCharacters().toString();
-            if (input.length() == 0) input = "0";
+            if (input.length() == 0) {
+                input = "0";
+                textFields[i].setStyle("-fx-text-fill: steelblue; -fx-font-size: 30px; -fx-background-color: transparent;");
+            }
             sudoku[i] = Integer.parseInt(input);
         }
         try {
